@@ -1,12 +1,12 @@
 package com.darkrockstudios.apps.nearbyfun
 
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.Status
@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity(),
                      GoogleApiClient.ConnectionCallbacks,
                      GoogleApiClient.OnConnectionFailedListener
 {
-	protected val TAG = MainActivity::class.simpleName
+	private val TAG = MainActivity::class.simpleName
 
 	private var m_googleApiClient: GoogleApiClient? = null
 
@@ -211,10 +211,13 @@ class MainActivity : AppCompatActivity(),
 	fun onSendClick(view: View)
 	{
 		val message = TEST_send_mesage.text.toString()
+		TEST_send_mesage.setText("")
 
 		m_connectionId?.let { connectionId ->
 			if (!TextUtils.isEmpty(message) && m_connectionId != null)
 			{
+				showMessage(message)
+
 				Log.d(TAG, "Sending message to : " + connectionId)
 				Nearby.Connections.sendPayload(m_googleApiClient, connectionId, Payload.fromBytes(message.toByteArray()))
 			}
@@ -224,7 +227,10 @@ class MainActivity : AppCompatActivity(),
 	fun showMessage(message: String)
 	{
 		Log.d(TAG, "message: " + message)
-		Snackbar.make(user_name_view, message, Snackbar.LENGTH_LONG).show()
+		//Snackbar.make(user_name_view, message, Snackbar.LENGTH_LONG).show()
+		val curText = TEST_chat_list.text
+
+		TEST_chat_list.setText(message + "\n" + curText, TextView.BufferType.NORMAL)
 	}
 
 	inner class PayloadHandler : PayloadCallback()
