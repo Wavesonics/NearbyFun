@@ -36,8 +36,10 @@
 			android:windowSoftInputMode="adjustResize">
 		</activity>
 
-		<service
-			android:name=".GameService">
+		<service android:name=".GameService">
+			<intent-filter>
+				<action android:name="com.darkrockstudios.apps.nearbyfun.GameService.STOP" />
+			</intent-filter>
 		</service>
 	</application>
 

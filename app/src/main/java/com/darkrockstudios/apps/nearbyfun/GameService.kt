@@ -1,9 +1,6 @@
 package com.darkrockstudios.apps.nearbyfun
 
-import android.app.Activity
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.Service
+import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.os.Binder
@@ -29,7 +26,8 @@ class GameService : Service(),
 	{
 		val TAG = GameService::class.simpleName
 
-		val ACTION_STARTED = GameService::class.qualifiedName + "STARTED"
+		val ACTION_STARTED = GameService::class.qualifiedName + ".STARTED"
+		val ACTION_STOP = GameService::class.qualifiedName + ".STOP"
 
 		val SERVICE_ID = "NearbyFun"
 		val EXTRA_IS_HOST = "is_host"
@@ -60,7 +58,9 @@ class GameService : Service(),
 			return intent
 		}
 
-		fun intent(activity: Activity): Intent = Intent(activity, GameService::class.java)
+		fun intent(context: Context): Intent = Intent(context, GameService::class.java)
+
+		fun stopIntent(context: Context): Intent = Intent(ACTION_STOP)
 	}
 
 	private val m_googleApiClient: GoogleApiClient by lazy {
@@ -75,6 +75,7 @@ class GameService : Service(),
 		NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
 				.setSmallIcon(R.drawable.ic_launcher_background)
 				.setContentTitle(getString(R.string.SERVICE_notification_title))
+				.addAction(R.drawable.ic_stop_service, "Stop Service", PendingIntent.getService(this, 0, GameService.stopIntent(this), 0))
 	}
 
 	private var m_isHost: Boolean = false
@@ -85,13 +86,23 @@ class GameService : Service(),
 
 	override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int
 	{
-		parseIntent(intent)
-		createNotificationChannel()
-		goForeground()
+		if (intent?.action.equals(ACTION_STOP))
+		{
+			Log.d(TAG, "Stopping Game Service")
 
-		m_googleApiClient.connect()
+			stopForeground(true)
+			stopSelf()
+		}
+		else
+		{
+			parseIntent(intent)
+			createNotificationChannel()
+			goForeground()
 
-		sendBroadcast(Intent(ACTION_STARTED))
+			m_googleApiClient.connect()
+
+			sendBroadcast(Intent(ACTION_STARTED))
+		}
 
 		return Service.START_NOT_STICKY
 	}
