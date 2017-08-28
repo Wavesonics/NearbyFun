@@ -17,17 +17,6 @@ abstract class BaseGameActivity : AppCompatActivity(), GameInterface
 	protected var m_service: GameService? = null
 	private var m_bound = false
 
-	override fun onDestroy()
-	{
-		super.onDestroy()
-
-		if (m_bound)
-		{
-			unbindService(m_connection)
-			m_bound = false
-		}
-	}
-
 	protected fun bindToGameService()
 	{
 		Log.d(TAG, "bindToGameService")
@@ -44,6 +33,7 @@ abstract class BaseGameActivity : AppCompatActivity(), GameInterface
 		if (m_bound)
 		{
 			unbindService(m_connection)
+			m_bound = false
 		}
 	}
 
