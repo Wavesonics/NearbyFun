@@ -1,4 +1,8 @@
 <resources>
 	<string name="app_name">NearbyFun</string>
 	<string name="title_activity_start">StartActivity</string>
+
+	<string name="SERVICE_notification_title">Service</string>
+	<string name="SERVICE_notification_subtitle_host">host</string>
+	<string name="SERVICE_notification_subtitle_client">client</string>
 </resources>

@@ -53,7 +53,7 @@ class StartActivity : AppCompatActivity(), PermissionListener
 		{
 			val userNameStr = userNameValue.toString()
 
-			startActivity<MainActivity>("m_userName" to userNameStr)
+			startActivity<ClientOrHostActivity>("m_userName" to userNameStr)
 		}
 	}
 }
