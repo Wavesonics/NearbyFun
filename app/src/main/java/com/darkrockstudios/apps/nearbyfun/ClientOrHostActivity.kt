@@ -35,6 +35,7 @@ class ClientOrHostActivity : BaseGameActivity(), GameInterface
 		super.onDestroy()
 
 		unregisterStartReceiver()
+		unbindFromGameService()
 	}
 
 	private fun registerStartReceiver()

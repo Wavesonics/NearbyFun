@@ -293,20 +293,18 @@ class GameService : Service(),
 
 	inner class PayloadHandler : PayloadCallback()
 	{
-		val TAG = PayloadHandler::class.simpleName
+		private val TAG = PayloadHandler::class.simpleName
 
 		override fun onPayloadReceived(endpointId: String?, payload: Payload?)
 		{
 			Log.d(TAG, endpointId + " onPayloadReceived")
 
-			payload?.let {
-				it.asBytes()?.let { bytes ->
-					val message = String(bytes, Charset.defaultCharset())
-					if (!TextUtils.isEmpty(message))
-					{
-						gameInterface?.onMessageReceived(message)
-						Log.d(TAG, "message: " + message)
-					}
+			payload?.asBytes()?.let { bytes ->
+				val message = String(bytes, Charset.defaultCharset())
+				if (!TextUtils.isEmpty(message))
+				{
+					gameInterface?.onMessageReceived(message)
+					Log.d(TAG, "message: " + message)
 				}
 			}
 		}
